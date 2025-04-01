@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CityBike</title>
+</head>
+<body>
+    <div class="cities-navigation">
+        <ul class="cities-list">
+            <% cities.forEach((city) => { %>
+                <li>
+                    <span class="city-name" attr-city-ID="<%= city.ID %>"><%= city.Name %></span>
+                    <button class="reserve-button">Reserve</button>
+                </li>
+            <% }); %>
+        </ul>
+    </div>
+</body>
+</html>

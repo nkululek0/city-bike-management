@@ -6,7 +6,11 @@ const dashboardController = {
             let data = dashboardModel.getDashboard();
             
             if (data && typeof data == "object" && Object.entries(data).length > 0) {
-                res.json(data);
+                // res.json(data);
+                res.render("home", {
+                    cities: data.cities,
+                    bikes: data.bikes
+                });
             }
             else {
                 let errorMessage = "There was an issue while proccessing dashboard data";
