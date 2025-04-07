@@ -4,17 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CityBike</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            padding: 0px;
+            margin: 0px;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            height: 95vh;
+        }
+
+        .disable {
+            display: none;
+        }
+
+        .page-navigation-section {
+            background-color: #000;
+            color: #fff;
+        }
+
+        .page-navigation-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+
+        .page-navigation {
+            padding: 15px;
+            list-style: none;
+        }
+
+        .page-navigation li {
+            padding: 5px;
+        }
+
+        .page-navigation li:hover {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <div class="cities-navigation">
-        <ul class="cities-list">
-            <% cities.forEach((city) => { %>
-                <li>
-                    <span class="city-name" attr-city-ID="<%= city.ID %>"><%= city.Name %></span>
-                    <button class="reserve-button">Reserve</button>
-                </li>
-            <% }); %>
-        </ul>
-    </div>
+    <main>
+        <div class="page-navigation-section">
+            <h2 class="page-navigation-header">City Bike</h2>
+            <ul class="page-navigation">
+                <li class="dashboard-tab-button">Dashboard</li>
+                <li class="bookings-tab-button">Bookings</li>
+            </ul>
+        </div>
+        <div class="dashboard-content">
+            <h3>Dashboard</h3>
+            <div class="available-bikes">
+                <p>Available</p>
+                <p>Count: <%= bikes.available.length %></p>
+            </div>
+            <div class="maintanace-bikes">
+                <p>Maintenance</p>
+                <p>Count: <%= bikes.unAvailable.length %></p>
+            </div>
+        </div>
+        <div class="bookings-content disable">
+            <h3>Bookings</h3>
+            <div>Bookings content</div>
+        </div>
+    </main>
 </body>
+<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        const classDisable = "disable";
+        const dashboardContentSection = $(".dashboard-content");
+        const bookingsContentSection =  $(".bookings-content");
+
+        $(".bookings-tab-button").on("click", function () {
+            dashboardContentSection.addClass(classDisable);
+            bookingsContentSection.removeClass(classDisable);
+        });
+
+        $(".dashboard-tab-button").on("click", function () {
+            bookingsContentSection.addClass(classDisable);
+            dashboardContentSection.removeClass(classDisable);
+        });
+    });
+</script>
 </html>
