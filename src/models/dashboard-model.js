@@ -1,32 +1,58 @@
+let data = {
+    cities: [
+        {
+            ID: 1,
+            Name: "De Pijp"
+        },
+        {
+            ID: 2,
+            Name: "Oud-Zuid"
+        },
+        {
+            ID: 3,
+            Name: "Reguliersgracht"
+        },
+        {
+            ID: 4,
+            Name: "Damrak"
+        }
+    ],
+    bikes: {
+        available: [
+            {
+                ID: 1,
+                Name: "Bike-1",
+                Available: true,
+                Location: "De Pijp"
+            },
+            {
+                ID: 3,
+                Name: "Bike-3",
+                Available: true,
+                Location: "Reguliersgracht"
+            },
+            {
+                ID: 4,
+                Name: "Bike-4",
+                Available: true,
+                Location: "Damrak"
+            }
+        ],
+        unAvailable: [
+            {
+                ID: 2,
+                Name: "Bike-2",
+                Available: false,
+                Location: "Oud-Zuid"
+            },
+        ]
+    }
+};
+
 const dashboardModel = {
     getDashboard () {
-        let result = [];
+        let result = data.bikes;
 
-        result = {
-            cities: ["De Pijp", "Oud-Zuid", "Reguliersgracht", "Damrak"],
-            bikes: [
-                {
-                    code: 1,
-                    availability: "available",
-                    location: "De Pijp"
-                },
-                {
-                    code: 2,
-                    availability: "un-available",
-                    location: "Oud-Zuid"
-                },
-                {
-                    code: 3,
-                    availability: "available",
-                    location: "Reguliersgracht"
-                },
-                {
-                    code: 4,
-                    availability: "available",
-                    location: "Damrak"
-                }
-            ]
-        };
         return result;
     }
 };
