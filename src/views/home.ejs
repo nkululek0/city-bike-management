@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/51803d04ca.js" crossorigin="anonymous"></script>
     <title>CityBike</title>
     <style>
         * {
@@ -14,7 +15,7 @@
         main {
             display: grid;
             grid-template-columns: 1fr 3fr;
-            height: 95vh;
+            height: 100vh;
         }
 
         .disable {
@@ -24,25 +25,86 @@
         .page-navigation-section {
             background-color: #000;
             color: #fff;
+            border-left: 2px solid #000;
         }
 
         .page-navigation-header {
             text-align: center;
-            margin-bottom: 20px;
-            padding: 15px;
+            margin-bottom: 1rem;
+            padding: 1.5rem;
         }
 
         .page-navigation {
-            padding: 15px;
             list-style: none;
         }
 
         .page-navigation li {
-            padding: 5px;
+            padding: 15px;
+        }
+
+        .page-nav-button {
+            font-size: 17px;
         }
 
         .page-navigation li:hover {
             cursor: pointer;
+        }
+
+        .page-nav-button.active {
+            background-color: #fff;
+            color: #000;
+        }
+
+        .dashboard-content {
+            margin: 1rem;
+        }
+
+        .content-header {
+            margin-bottom: 2.3rem;
+        }
+
+        .maintenance-bikes,
+        .available-bikes {
+            width: 15rem;
+            display: inline-block;
+            border: 1px solid #000;
+        }
+
+        .available-bikes {
+            background-color: #3ccd00;
+            margin-right: 2rem;
+        }
+
+        .maintenance-bikes {
+            background-color: #d3d3d3;
+        }
+
+        .dashboard-content .status {
+            font-size: 20px;
+            text-align: center;
+            margin: 5px 0px;
+            text-decoration: underline;
+        }
+
+        i.fa-solid {
+            font-family: FontAwesome;
+        }
+
+        .fa-solid.fa-bicycle {
+            display: block;
+            width: 100%;
+            text-align: center;
+            font-size: 7rem;
+        }
+
+        .bike-count {
+            padding: 10px;
+            background-color: #fff;
+            border-top: 1px solid #000;
+        }
+
+        .bookings-content {
+            margin: 1rem;
         }
     </style>
 </head>
@@ -51,24 +113,28 @@
         <div class="page-navigation-section">
             <h2 class="page-navigation-header">City Bike</h2>
             <ul class="page-navigation">
-                <li class="dashboard-tab-button">Dashboard</li>
-                <li class="bookings-tab-button">Bookings</li>
+                <li class="dashboard-tab-button page-nav-button active">Dashboard</li>
+                <li class="bookings-tab-button page-nav-button">Bookings</li>
             </ul>
         </div>
-        <div class="dashboard-content">
-            <h3>Dashboard</h3>
-            <div class="available-bikes">
-                <p>Available</p>
-                <p>Count: <%= bikes.available.length %></p>
+        <div class="page-content-section">
+            <div class="dashboard-content">
+                <h1 class="content-header">Dashboard</h1>
+                <div class="available-bikes">
+                    <p class="status">Available</p>
+                    <i class="fa-solid fa-bicycle"></i>
+                    <p class="bike-count">Count: <%= bikes.available.length %></p>
+                </div>
+                <div class="maintenance-bikes">
+                    <p class="status">Maintenance</p>
+                    <i class="fa-solid fa-bicycle"></i>
+                    <p class="bike-count">Count: <%= bikes.unAvailable.length %></p>
+                </div>
             </div>
-            <div class="maintanace-bikes">
-                <p>Maintenance</p>
-                <p>Count: <%= bikes.unAvailable.length %></p>
+            <div class="bookings-content disable">
+                <h1 class="content-header">Bookings</h1>
+                <div>Bookings content</div>
             </div>
-        </div>
-        <div class="bookings-content disable">
-            <h3>Bookings</h3>
-            <div>Bookings content</div>
         </div>
     </main>
 </body>
@@ -76,17 +142,31 @@
 <script type="text/javascript">
     $(document).ready(function () {
         const classDisable = "disable";
-        const dashboardContentSection = $(".dashboard-content");
-        const bookingsContentSection =  $(".bookings-content");
+        const classActive = "active";
 
-        $(".bookings-tab-button").on("click", function () {
-            dashboardContentSection.addClass(classDisable);
-            bookingsContentSection.removeClass(classDisable);
+        const $bookingsTabButton = $(".bookings-tab-button");
+        const $dashboardTabButton = $(".dashboard-tab-button");
+        const $dashboardContentSection = $(".dashboard-content");
+        const $bookingsContentSection =  $(".bookings-content");
+
+        $bookingsTabButton.on("click", function () {
+            // Content Update
+            $dashboardContentSection.addClass(classDisable);
+            $bookingsContentSection.removeClass(classDisable);
+
+            // Button colour update
+            $dashboardTabButton.removeClass(classActive);            
+            $(this).addClass(classActive);
         });
 
-        $(".dashboard-tab-button").on("click", function () {
-            bookingsContentSection.addClass(classDisable);
-            dashboardContentSection.removeClass(classDisable);
+        $dashboardTabButton.on("click", function () {
+            // Content Update
+            $bookingsContentSection.addClass(classDisable);
+            $dashboardContentSection.removeClass(classDisable);
+
+            // Button colour update
+            $bookingsTabButton.removeClass(classActive);
+            $(this).addClass(classActive);
         });
     });
 </script>
