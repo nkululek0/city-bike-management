@@ -22,28 +22,42 @@ let data = {
             {
                 ID: 1,
                 Name: "Bike-1",
-                Available: true,
+                BookedTimes: 2,
                 Location: "De Pijp"
             },
             {
                 ID: 3,
                 Name: "Bike-3",
-                Available: true,
+                BookedTimes: 3,
                 Location: "Reguliersgracht"
             },
             {
                 ID: 4,
                 Name: "Bike-4",
-                Available: true,
+                BookedTimes: 1,
                 Location: "Damrak"
             }
         ],
-        unAvailable: [
+        booked: [
             {
                 ID: 2,
                 Name: "Bike-2",
-                Available: false,
+                BookedTimes: 5,
                 Location: "Oud-Zuid"
+            },
+        ],
+        maintenance: [
+            {
+                ID: 5,
+                Name: "Bike-5",
+                BookedTimes: 6,
+                Location: "Oud-Zuid"
+            },
+            {
+                ID: 6,
+                Name: "Bike-6",
+                BookedTimes: 6,
+                Location: "Damrak"
             },
         ]
     }
@@ -51,7 +65,7 @@ let data = {
 
 const dashboardModel = {
     getDashboard () {
-        let result = data.bikes;
+        let result = data;
 
         return result;
     }

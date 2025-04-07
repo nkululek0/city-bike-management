@@ -8,7 +8,8 @@ const dashboardController = {
             if (data && typeof data == "object" && Object.entries(data).length > 0) {
                 // res.json(data);
                 res.render("home", {
-                    bikes: data
+                    cities: data.cities,
+                    bikes: data.bikes
                 });
             }
             else {

@@ -22,7 +22,7 @@ app.use(
 );
 
 import dashboardRouter from "./routers/dashboard-router.js";
-app.use("/dashboard", dashboardRouter);
+app.use("/", dashboardRouter);
 
 app.listen(process.env.APPLICATION_SERVER_PORT, (error) => {
     if (error) {

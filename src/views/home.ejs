@@ -63,20 +63,23 @@
             margin-bottom: 2.3rem;
         }
 
-        .maintenance-bikes,
-        .available-bikes {
+        .bike-container {
             width: 15rem;
             display: inline-block;
             border: 1px solid #000;
+            margin-right: 2rem;
         }
 
         .available-bikes {
             background-color: #3ccd00;
-            margin-right: 2rem;
+        }
+
+        .booked-bikes {
+            background-color: #d3d3d3;
         }
 
         .maintenance-bikes {
-            background-color: #d3d3d3;
+            background-color: #ac0000;
         }
 
         .dashboard-content .status {
@@ -120,15 +123,20 @@
         <div class="page-content-section">
             <div class="dashboard-content">
                 <h1 class="content-header">Dashboard</h1>
-                <div class="available-bikes">
+                <div class="available-bikes bike-container">
                     <p class="status">Available</p>
                     <i class="fa-solid fa-bicycle"></i>
                     <p class="bike-count">Count: <%= bikes.available.length %></p>
                 </div>
-                <div class="maintenance-bikes">
+                <div class="booked-bikes bike-container">
+                    <p class="status">Booked</p>
+                    <i class="fa-solid fa-bicycle"></i>
+                    <p class="bike-count">Count: <%= bikes.booked.length %></p>
+                </div>
+                <div class="maintenance-bikes bike-container">
                     <p class="status">Maintenance</p>
                     <i class="fa-solid fa-bicycle"></i>
-                    <p class="bike-count">Count: <%= bikes.unAvailable.length %></p>
+                    <p class="bike-count">Count: <%= bikes.maintenance.length %></p>
                 </div>
             </div>
             <div class="bookings-content disable">
