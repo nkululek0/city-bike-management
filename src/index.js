@@ -24,6 +24,9 @@ app.use(
 import dashboardRouter from "./routers/dashboard-router.js";
 app.use("/", dashboardRouter);
 
+import bookingsRouter from "./routers/bookings-router.js";
+app.use("/bookings", bookingsRouter);
+
 app.listen(process.env.APPLICATION_SERVER_PORT, (error) => {
     if (error) {
         console.log(error);
