@@ -23,9 +23,14 @@
         }
 
         .page-navigation-section {
+            width: 25vw;
             background-color: #000;
             color: #fff;
             border-left: 2px solid #000;
+        }
+
+        .page-content-section {
+            width: 75vw;
         }
 
         .page-navigation-header {
@@ -107,8 +112,64 @@
         }
 
         .bookings-content {
-            margin: 1rem;
+            width: 100%;
+            padding: 1rem;
         }
+
+        .bookings-content .bike-list-container {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            width: 100%;
+            height: 200px;
+        }
+
+        .bookings-content .bike {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #000;
+        }
+
+        .bookings-content .upper-section {
+            position: relative;
+            height: 80%;
+        }
+
+        .bookings-content .lower-section {
+            height: 20%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-top: 1px solid #000;
+        }
+
+        .bookings-content .bike-picture {
+            width: 100%;
+            height: 100%;
+        }
+
+        .bookings-content .bike-status-container {
+            position: absolute;
+            top: 7%;
+            left: 63%;
+            width: 5rem;
+        }
+
+        .bookings-content .bike-status {
+            padding: 0.2rem 0.5rem;
+            text-align: center;
+            color: #fff;
+            text-transform: capitalize;
+        }
+
+        .bookings-content .bike-status.available {
+            background-color: #00D30B;
+        }
+
+        .bookings-content .bike-status.booked {
+            background-color: #737373;
+        }
+
     </style>
 </head>
 <body>
@@ -141,7 +202,21 @@
             </div>
             <div class="bookings-content disable">
                 <h1 class="content-header">Bookings</h1>
-                <div>Bookings content</div>
+                <p class="hub-filter">Select Hub:</p>
+                <div class="hub-options-section">
+                    <p class="hub option-all">All</p>
+                    <!-- Rest of the options will go bellow -->
+
+                </div>
+                <div class="bike-options-section">
+                    <div class="no-bike-options disable">
+                        <h3>No Bikes Available</h3>
+                    </div>
+                    <div class="bike-list-container">
+
+                    </div>
+                    <!-- List of bikes will go here -->
+                </div>
             </div>
         </div>
     </main>
@@ -156,16 +231,7 @@
         const $dashboardTabButton = $(".dashboard-tab-button");
         const $dashboardContentSection = $(".dashboard-content");
         const $bookingsContentSection =  $(".bookings-content");
-
-        $bookingsTabButton.on("click", function () {
-            // Content Update
-            $dashboardContentSection.addClass(classDisable);
-            $bookingsContentSection.removeClass(classDisable);
-
-            // Button colour update
-            $dashboardTabButton.removeClass(classActive);            
-            $(this).addClass(classActive);
-        });
+        const $bikesListContainer = $(".bookings-content .bike-list-container");
 
         $dashboardTabButton.on("click", function () {
             // Content Update
@@ -176,6 +242,81 @@
             $bookingsTabButton.removeClass(classActive);
             $(this).addClass(classActive);
         });
+
+        $bookingsTabButton.on("click", async function () {
+            // Button colour update
+            $dashboardTabButton.removeClass(classActive);            
+            $(this).addClass(classActive);
+
+            // Content Update
+            $dashboardContentSection.addClass(classDisable);
+            $bookingsContentSection.removeClass(classDisable);
+
+            _setBikeList();
+            _prepareAndSetBikeListHtmlContent();
+        });
+
+        const _bikeListData = {
+            allBikes: [],
+            bikeListIsSet: false
+        }
+
+        const _setBikeList = async () => {
+            try {
+                let response = await fetch("/bookings/", {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" }
+                });
+
+                let data = await response.json();
+                let bikes = data.bikes;
+
+                if (bikes.length > 0) {
+                    _bikeListData.allBikes = bikes;
+                }
+
+                _bikeListData.bikeListIsSet = true;
+            } 
+            catch (error) {
+                console.log(error);
+            }
+        }
+
+        const _prepareAndSetBikeListHtmlContent = (hub) => {
+            $bikesListContainer.html("");
+
+            let bikeListInterval = setInterval(() => {
+                if (_bikeListData.bikeListIsSet) {
+                    clearInterval(bikeListInterval);
+                    _setBikeListHtmlContent(hub);
+                }
+            }, 100);
+        }
+
+        const _setBikeListHtmlContent = (hub) => {
+            let bikes = _bikeListData.allBikes;
+
+            if (bikes.length > 0) {
+                bikes.forEach((bike) => {
+                    $bikesListContainer.append(`
+                        <div class="bike">
+                            <div class="upper-section">
+                                <img src="/images/bikes${ bike.PictureURL }" alt="picture of bike" class="bike-picture">
+                                <div class="bike-status-container">
+                                    <p class="bike-status ${ bike.Status }">${ bike.Status }</p>    
+                                </div>    
+                            </div>
+                            <div class="lower-section">
+                                <p class="bike-name">${ bike.Name }</p>
+                            </div>
+                        </div>
+                    `);
+                });
+            }
+            else {
+                $bikesListContainer.html(`<h3 class="no-bikes">No Bikes to Show</div>`);
+            }
+        }
     });
 </script>
 </html>

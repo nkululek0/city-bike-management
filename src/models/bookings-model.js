@@ -1,19 +1,49 @@
-import { User, Bike, Hub, Booking } from "../services/database-data.js";
+import { User, Bike, Hub, Booking, BookingsStatus, BikeStatus } from "../services/database-data.js";
+
+/**
+ * Values of BikeStatusTypes will be:
+ * ["available", "booked", "maintenance"]
+ */
+const BikeStatusTypes = [];
+BikeStatus.forEach((status) => {
+    BikeStatusTypes[status.ID] = status.Value;
+});
+
+const _bikeListOperations = {
+    validBikeStatuses: {
+        available: BikeStatusTypes[1],
+        booked: BikeStatusTypes[2]
+    },
+    updateBikeStatus (bike, bikeStatus) {
+        let result = {
+            ID: bike.ID,
+            Name: bike.Name,
+            PictureURL: bike.PictureURL,
+            BookedTimes: bike.BookedTimes,
+            HubID: bike.HubID,
+            Status: ""
+        };
+
+        result.Status = bikeStatus;
+
+        return result;
+    }
+}
 
 const bookingsModel = {
     async getBikeList () {
-        let result = {};
+        let result = [];
 
-        let bookedBikesIDs = Booking.map((booking) => booking.BikeID);
-        let availableBikes = bookedBikesIDs.map((bikeID) => {
-            return Bike.filter((bike) => bike.ID != bikeID);
-        });
-        let bookedBikes = bookedBikesIDs.map((bikeId) => {
-            return Bike.filter((bike) => bike.ID == bikeId);
+        Bike.forEach((bike) => {
+            let bikeStatus = BikeStatusTypes[bike.BikeStatusID];
+
+            if (_bikeListOperations.validBikeStatuses.hasOwnProperty(bikeStatus)) {
+                let updatedBike = _bikeListOperations.updateBikeStatus(bike, bikeStatus);
+
+                result.push(updatedBike);
+            }
         });
 
-        result.availableBikes = availableBikes;
-        result.bookedBikes = bookedBikes;
         return result;
     }
 };
