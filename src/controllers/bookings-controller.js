@@ -27,6 +27,25 @@ const bookingsController = {
         }
     },
 
+    async getHubList (req, res) {
+        try {
+            let hubList = bookingsModel.getHubList();
+
+            if (hubList) {
+                res.json({
+                    hubs: hubList
+                });
+            }
+        }
+        catch (error) {
+            res.json({
+                error: {
+                    message: error.message
+                }
+            });
+        }
+    },
+
     async getBikeList (req, res) {
         const getBikeListErrors = _errorTypes.getBikeList;
 

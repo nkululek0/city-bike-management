@@ -45,6 +45,13 @@ const bookingsModel = {
         });
 
         return result;
+    },
+
+    async getHubList () {
+        let result = [];
+
+        result = Hub;
+        return result;
     }
 };
 

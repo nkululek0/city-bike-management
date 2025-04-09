@@ -254,11 +254,34 @@
 
             _setBikeList();
             _prepareAndSetBikeListHtmlContent();
+
+            _setHubListHtmlContent();
         });
 
         const _bikeListData = {
             allBikes: [],
             bikeListIsSet: false
+        }
+
+        const _setHubListHtmlContent = async () => {
+            try {
+                let response = await fetch("/bookings/hub", {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" }
+                });
+
+                let data = await response.json();
+                let hubs = data.hubs;
+
+                if (hubs.length > 0) {
+                    $(".bookings-content .hub-options-section").prepend(`
+                        <p class="hub" attr-hub-option=""></p>
+                    `);
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
         }
 
         const _setBikeList = async () => {
