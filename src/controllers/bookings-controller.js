@@ -29,7 +29,7 @@ const bookingsController = {
 
     async getHubList (req, res) {
         try {
-            let hubList = bookingsModel.getHubList();
+            let hubList = await bookingsModel.getHubList();
 
             if (hubList) {
                 res.json({

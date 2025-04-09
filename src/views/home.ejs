@@ -65,7 +65,7 @@
         }
 
         .content-header {
-            margin-bottom: 2.3rem;
+            margin-bottom: 1.8rem;
         }
 
         .bike-container {
@@ -116,18 +116,64 @@
             padding: 1rem;
         }
 
+        .bookings-content .hub-options-section {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .bookings-content .hub-filter {
+            margin-bottom: 1rem;
+        }
+
+        .bookings-content .hub {
+            border: 1px solid #000;
+            padding: 0.2rem 0.9rem;
+        }
+        .bookings-content .hub.active {
+            background-color: #636161;
+            color: #fff;
+        }
+        .bookings-content .hub:hover {
+            cursor: pointer;
+        }
+
         .bookings-content .bike-list-container {
             display: grid;
             gap: 1rem;
             grid-template-columns: 1fr 1fr 1fr 1fr;
             width: 100%;
-            height: 200px;
+            position: relative;
+            height: max-content;
         }
 
         .bookings-content .bike {
             display: flex;
             flex-direction: column;
             border: 1px solid #000;
+            height: 100%;
+            width: inherit;
+        }
+        .bookings-content .bike:hover .bike-content-overlay {
+            display: flex;
+        }
+        .bookings-content .bike:hover .bike-content {
+            /* opacity: 0.5; */
+        }
+
+        .bookings-content .bike-content-overlay {
+            display: flex;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background-color: #80808061;
+            height: 100%;
+            position: absolute;
+            width: calc((100% / 4) - 0.9rem);
+        }
+
+        .bookings-content .bike-content {
+            height: 100%;
         }
 
         .bookings-content .upper-section {
@@ -150,8 +196,8 @@
 
         .bookings-content .bike-status-container {
             position: absolute;
-            top: 7%;
-            left: 63%;
+            top: 1rem;
+            left: 9.5rem;
             width: 5rem;
         }
 
@@ -167,9 +213,26 @@
         }
 
         .bookings-content .bike-status.booked {
-            background-color: #737373;
+            background-color: #636161;
         }
 
+        .bookings-content .book-bike {
+            background-color: #00D30B;
+            padding: 0.4rem 0.9rem;
+            text-align: center;
+            color: #fff;
+        }
+        .bookings-content .book-bike:hover {
+            cursor: pointer;
+        }
+
+        .bookings-content .unavailable-bike {
+            width: 100%;
+            text-align: center;
+            background-color: #636161;
+            padding: 0.7rem;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -204,18 +267,15 @@
                 <h1 class="content-header">Bookings</h1>
                 <p class="hub-filter">Select Hub:</p>
                 <div class="hub-options-section">
-                    <p class="hub option-all">All</p>
-                    <!-- Rest of the options will go bellow -->
-
+                    <!-- Hub listing goes here -->
                 </div>
                 <div class="bike-options-section">
                     <div class="no-bike-options disable">
                         <h3>No Bikes Available</h3>
                     </div>
                     <div class="bike-list-container">
-
+                        <!-- List of bikes will go here -->
                     </div>
-                    <!-- List of bikes will go here -->
                 </div>
             </div>
         </div>
@@ -229,8 +289,12 @@
 
         const $bookingsTabButton = $(".bookings-tab-button");
         const $dashboardTabButton = $(".dashboard-tab-button");
+
         const $dashboardContentSection = $(".dashboard-content");
+
         const $bookingsContentSection =  $(".bookings-content");
+        const $hubsListSection = $(".bookings-content .hub-options-section");
+        const $hubListOptionButton = $(".bookings-content .hub");
         const $bikesListContainer = $(".bookings-content .bike-list-container");
 
         $dashboardTabButton.on("click", function () {
@@ -252,10 +316,20 @@
             $dashboardContentSection.addClass(classDisable);
             $bookingsContentSection.removeClass(classDisable);
 
+            _setHubListHtmlContent();
+
             _setBikeList();
             _prepareAndSetBikeListHtmlContent();
 
-            _setHubListHtmlContent();
+        });
+
+        $bookingsContentSection.on("click", ".hub", function () {
+            $(`.bookings-content .hub.${classActive}`).removeClass(classActive);
+            $(this).addClass(classActive);
+
+            const selectedHubID = Number($(this).attr("attr-hub-id"));
+
+            _setBikeListHtmlContent(selectedHubID);
         });
 
         const _bikeListData = {
@@ -264,6 +338,8 @@
         }
 
         const _setHubListHtmlContent = async () => {
+            $hubsListSection.html("");
+
             try {
                 let response = await fetch("/bookings/hub", {
                     method: "GET",
@@ -274,10 +350,14 @@
                 let hubs = data.hubs;
 
                 if (hubs.length > 0) {
-                    $(".bookings-content .hub-options-section").prepend(`
-                        <p class="hub" attr-hub-option=""></p>
-                    `);
+                    hubs.forEach((hub) => {
+                        $hubsListSection.append(`
+                            <p class="hub" attr-hub-ID="${ hub.ID }">${ hub.Name }</p>
+                        `);
+                    }); 
                 }
+
+                $hubsListSection.prepend("<p class='hub active' attr-hub-ID='0'>All</p>");
             }
             catch (error) {
                 console.log(error);
@@ -286,7 +366,7 @@
 
         const _setBikeList = async () => {
             try {
-                let response = await fetch("/bookings/", {
+                let response = await fetch("/bookings/bike", {
                     method: "GET",
                     headers: { "Content-Type": "application/json" }
                 });
@@ -305,39 +385,66 @@
             }
         }
 
-        const _prepareAndSetBikeListHtmlContent = (hub) => {
-            $bikesListContainer.html("");
-
-            let bikeListInterval = setInterval(() => {
-                if (_bikeListData.bikeListIsSet) {
-                    clearInterval(bikeListInterval);
-                    _setBikeListHtmlContent(hub);
-                }
-            }, 100);
+        const _prepareAndSetBikeListHtmlContent = (hubID) => {
+            if (!_bikeListData.bikeListIsSet) {
+                let bikeListInterval = setInterval(() => {
+                    if (_bikeListData.bikeListIsSet) {
+                        clearInterval(bikeListInterval);
+                        _setBikeListHtmlContent(hubID);
+                    }
+                }, 100);
+            }
+            else {
+                _setBikeListHtmlContent(hubID);
+            }
         }
 
-        const _setBikeListHtmlContent = (hub) => {
+        const _setBikeListHtmlContent = (hubID) => {
+            $bikesListContainer.html("");
+
             let bikes = _bikeListData.allBikes;
+            let noBikesContent = `<h3 class="no-bikes">No Bikes to Show</div>`;
 
             if (bikes.length > 0) {
+                if (hubID && hubID > 0) {
+                    bikes = bikes.filter((bike) => bike.HubID == hubID);
+
+                    if (bikes.length > 0) {
+                        appendBikes();
+                    }
+                    else {
+                        $bikesListContainer.html(noBikesContent);
+                    }
+                } 
+                else {
+                    appendBikes();
+                }
+            }
+            else {
+                $bikesListContainer.html(noBikesContent);
+            }
+
+            function appendBikes () {
                 bikes.forEach((bike) => {
                     $bikesListContainer.append(`
                         <div class="bike">
-                            <div class="upper-section">
-                                <img src="/images/bikes${ bike.PictureURL }" alt="picture of bike" class="bike-picture">
-                                <div class="bike-status-container">
-                                    <p class="bike-status ${ bike.Status }">${ bike.Status }</p>    
-                                </div>    
+                            <div class="bike-content">
+                                <div class="upper-section">
+                                    <img src="/images/bikes${ bike.PictureURL }" alt="picture of bike" class="bike-picture">
+                                    <div class="bike-status-container">
+                                        <p class="bike-status ${ bike.Status }">${ bike.Status }</p>    
+                                    </div>    
+                                </div>
+                                <div class="lower-section">
+                                    <p class="bike-name">${ bike.Name }</p>
+                                </div>
                             </div>
-                            <div class="lower-section">
-                                <p class="bike-name">${ bike.Name }</p>
+                            <div class="bike-content-overlay">
+                                ${ bike.Status == "available" ?  "<p class='book-bike'>Book</p>" : "<p class='unavailable-bike'>This Bike is Booked!</p>" }
                             </div>
                         </div>
                     `);
                 });
-            }
-            else {
-                $bikesListContainer.html(`<h3 class="no-bikes">No Bikes to Show</div>`);
             }
         }
     });

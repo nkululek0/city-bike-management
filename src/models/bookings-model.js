@@ -2,9 +2,9 @@ import { User, Bike, Hub, Booking, BookingsStatus, BikeStatus } from "../service
 
 /**
  * Values of BikeStatusTypes will be:
- * ["available", "booked", "maintenance"]
+ * ["", "available", "booked", "maintenance"]
  */
-const BikeStatusTypes = [];
+const BikeStatusTypes = [""];
 BikeStatus.forEach((status) => {
     BikeStatusTypes[status.ID] = status.Value;
 });
@@ -31,6 +31,13 @@ const _bikeListOperations = {
 }
 
 const bookingsModel = {
+    async getHubList () {
+        let result = [];
+
+        result = Hub;
+        return result;
+    },
+
     async getBikeList () {
         let result = [];
 
@@ -44,13 +51,6 @@ const bookingsModel = {
             }
         });
 
-        return result;
-    },
-
-    async getHubList () {
-        let result = [];
-
-        result = Hub;
         return result;
     }
 };

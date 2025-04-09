@@ -12,19 +12,19 @@ let User = [
 let Hub = [
     {
         ID: 1,
-        Location: "De Pijp"
+        Name: "De Pijp"
     },
     {
         ID: 2,
-        Location: "Oud-Zuid"
+        Name: "Oud-Zuid"
     },
     {
         ID: 3,
-        Location: "Reguliersgracht"
+        Name: "Reguliersgracht"
     },
     {
         ID: 4,
-        Location: "Damrak"
+        Name: "Damrak"
     }
 ];
 
@@ -34,7 +34,7 @@ let Bike = [
         Name: "Bike-1",
         PictureURL: "/bike-1.png",
         BookedTimes: 2,
-        HubID: 1,
+        HubID: 2,
         BikeStatusID: 1
     },
     {
