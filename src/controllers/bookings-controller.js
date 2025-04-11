@@ -113,7 +113,7 @@ const bookingsController = {
             if (!endDate) {
                 throw new Error(bookBikeErrors.missingEndDate);
             }
-            
+
             let bookBikeSuccessfully = await bookingsModel.bookBike(bikeID, userID, startDate, endDate);
         }
         catch (error) {
@@ -123,6 +123,9 @@ const bookingsController = {
             switch (currentError) {
                 case bookBikeErrors.invalidBikeID || bookBikeErrors.invalidUserID || bookBikeErrors.missingStartDate || bookBikeErrors.missingEndDate:
                     responseStatus = res.status(400);
+                    break;
+                case bookBikeErrors.noBikeFound:
+                    responseStatus = res.status(404);
                     break;
                 default:
                     responseStatus = res.status(500);
