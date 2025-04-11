@@ -7,4 +7,6 @@ router.get("/hub", bookingsController.getHubList);
 router.get("/bike", bookingsController.getBikeList);
 router.get("/:userID", bookingsController.getBookings);
 
+router.post("/:userID/:bikeID", bookingsController.bookBike);
+
 export default router;

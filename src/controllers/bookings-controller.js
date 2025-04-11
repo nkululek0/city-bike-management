@@ -3,6 +3,13 @@ import bookingsModel from "../models/bookings-model.js";
 const _errorTypes = {
     getBikeList: {
         retrievingBikeList: "There was a problem while trying to retrieve the bike list, please try again"
+    },
+    bookBike: {
+        invalidBikeID: "No bike ID or invalid bike ID provided, please try again",
+        invalidUserID: "No user ID or invalid user ID provided, please try again",
+        missingStartDate: "Booking start date is missing, please enter that information and try again",
+        missingEndDate: "Booking end date is missing, please enter that information and try again",
+        noBikeFound: "Could not find bike with that ID"
     }
 };
 
@@ -81,6 +88,53 @@ const bookingsController = {
             else {
                 res.json(responseJSON);
             }
+        }
+    },
+
+    async bookBike (req, res) {
+        const bookBikeErrors = _errorTypes.bookBike;
+
+        try {
+            let bikeID = Number(req.params.bikeID);
+            let userID = Number(req.params.userID);
+    
+            if (!bikeID) {
+                throw new Error(bookBikeErrors.invalidBikeID);
+            }
+            if (!userID) {
+                throw new Error(bookBikeErrors.invalidUserID);
+            }
+    
+            let { startDate, endDate } = req.body;
+    
+            if (!startDate) {
+                throw new Error(bookBikeErrors.missingStartDate);
+            }
+            if (!endDate) {
+                throw new Error(bookBikeErrors.missingEndDate);
+            }
+            
+            let bookBikeSuccessfully = await bookingsModel.bookBike(bikeID, userID, startDate, endDate);
+        }
+        catch (error) {
+            const currentError = error.message;
+            let responseStatus = null;
+
+            switch (currentError) {
+                case bookBikeErrors.invalidBikeID || bookBikeErrors.invalidUserID || bookBikeErrors.missingStartDate || bookBikeErrors.missingEndDate:
+                    responseStatus = res.status(400);
+                    break;
+                default:
+                    responseStatus = res.status(500);
+            }
+
+            const responseJSON = {
+                error: {
+                    message: error.message
+                }
+            };
+
+            responseStatus.json(responseJSON);
         }
     }
 };

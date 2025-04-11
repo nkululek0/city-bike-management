@@ -40,8 +40,9 @@ const bookingsModel = {
 
     async getBikeList () {
         let result = [];
+        let Bikes = Bike;
 
-        Bike.forEach((bike) => {
+        Bikes.forEach((bike) => {
             let bikeStatus = BikeStatusTypes[bike.BikeStatusID];
 
             if (_bikeListOperations.validBikeStatuses.hasOwnProperty(bikeStatus)) {
@@ -50,6 +51,29 @@ const bookingsModel = {
                 result.push(updatedBike);
             }
         });
+
+        return result;
+    },
+
+    async getBike (bikeID) {
+        const self = this;
+        let result;
+        const bike = (await self.getBikeList()).find((bike) => bike.ID == bikeID);
+
+        if (bike) {
+            result = bike;
+        }
+        else {
+            throw new Error("Could not find bike with that ID");
+        }
+
+        return result;
+    },
+
+    async bookBike (bikeID, userID, bookingStartDate, bookingEndDate) {
+        const self = this;
+        let result = "";
+        const bike = await self.getBike(bikeID);
 
         return result;
     }
