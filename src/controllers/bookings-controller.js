@@ -95,8 +95,8 @@ const bookingsController = {
         const bookBikeErrors = _errorTypes.bookBike;
 
         try {
-            let bikeID = Number(req.params.bikeID);
             let userID = Number(req.params.userID);
+            let bikeID = Number(req.params.bikeID);
     
             if (!bikeID) {
                 throw new Error(bookBikeErrors.invalidBikeID);
@@ -114,7 +114,14 @@ const bookingsController = {
                 throw new Error(bookBikeErrors.missingEndDate);
             }
 
-            let bookBikeSuccessfully = await bookingsModel.bookBike(bikeID, userID, startDate, endDate);
+            let bookedBike = await bookingsModel.bookBike(userID, bikeID, startDate, endDate);
+
+            if (bookedBike.hasOwnProperty("bookingID")) {
+                res.json({
+                    data: "Biked Booked Successfully"
+                });
+            }
+
         }
         catch (error) {
             const currentError = error.message;

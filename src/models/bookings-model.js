@@ -1,4 +1,4 @@
-import { User, Bike, Hub, Booking, BookingsStatus, BikeStatus } from "../services/database-data.js";
+import { User, Bike, Hub, Booking, BookingsStatus, BikeStatus, Date } from "../services/database-data.js";
 
 /**
  * Values of BikeStatusTypes will be:
@@ -14,6 +14,7 @@ const _bikeListOperations = {
         available: BikeStatusTypes[1],
         booked: BikeStatusTypes[2]
     },
+
     updateBikeStatus (bike, bikeStatus) {
         let result = {
             ID: bike.ID,
@@ -21,10 +22,8 @@ const _bikeListOperations = {
             PictureURL: bike.PictureURL,
             BookedTimes: bike.BookedTimes,
             HubID: bike.HubID,
-            Status: ""
+            Status: bikeStatus
         };
-
-        result.Status = bikeStatus;
 
         return result;
     }
@@ -70,13 +69,59 @@ const bookingsModel = {
         return result;
     },
 
-    async bookBike (bikeID, userID, bookingStartDate, bookingEndDate) {
+    async bookBike (userID, bikeID, bookingStartDate, bookingEndDate) {
         const self = this;
-        let result = "";
+        let result = {};
         const bike = await self.getBike(bikeID);
+        const bikeStatus = _bikeListOperations.validBikeStatuses.booked;
+        const bikeStatusID = BikeStatusTypes.indexOf(bikeStatus);
+
+        if (bike.Status == _bikeListOperations.validBikeStatuses.available) {
+            const bookingID = _createBooking(bikeID, bikeStatusID, bookingStartDate, bookingEndDate);
+            _updateUserBookings(userID, bookingID);
+            result.bookingID = bookingID;
+        }
 
         return result;
     }
 };
+
+const _createBooking = (bikeID, bikeStatusID, bookingStartDate, bookingEndDate) => {
+    const booking = {
+        ID: (Booking.length + 1),
+        BikeID: bikeID,
+        BookingsStatusID: 2,
+        DateID: _createDateEntry(bookingStartDate, bookingEndDate)
+    }
+    _updateBikeStatus(bikeID, bikeStatusID);
+
+    Booking.push(booking);
+    return booking.ID;
+};
+
+const _createDateEntry = (startDate, endDate) => {
+    const date = {
+        ID: (Date.length + 1),
+        From: startDate,
+        To: endDate
+    };
+
+    Date.push(date);
+    return date.ID;
+};
+
+const _updateBikeStatus = (bikeID, bikeStatusID) => {
+    for (let bike of Bike) {
+        if (bike.ID == bikeID) {
+            bike.BikeStatusID = bikeStatusID;
+            break;
+        }
+    }
+};
+
+const _updateUserBookings = (userID, bookingID) => {
+    const userIndex = User.findIndex((user) => user.ID == userID);
+    User[userIndex].BookingsID.push(bookingID);
+}
 
 export default bookingsModel;
