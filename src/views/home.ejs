@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/lib/jquery.modal.min.css">
     <script src="https://kit.fontawesome.com/51803d04ca.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+    <script src="/scripts/lib/jquery.dateandtime.js"></script>
+    <script src="/scripts/lib/jquery.modal.min.js"></script>
     <title>CityBike</title>
     <style>
         * {
@@ -215,20 +219,30 @@
 
         .bookings-content .book-bike {
             background-color: #00D30B;
-            padding: 0.4rem 0.9rem;
             text-align: center;
             color: #fff;
         }
-        .bookings-content .book-bike:hover {
-            cursor: pointer;
-        }
-
         .bookings-content .unavailable-bike {
             width: 100%;
             text-align: center;
             background-color: #636161;
             padding: 0.7rem;
             color: #fff;
+        }
+
+        .bookings-content .book-bike a {
+            width: 100%;
+            display: block;
+            height: 100%;
+            padding: 0.4rem 0.9rem;
+        }
+        .bookings-content .bike:hover a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .bookings-content .book-bike a:hover {
+            color: #fff;
+            text-decoration: none;
         }
     </style>
 </head>
@@ -277,14 +291,39 @@
             </div>
         </div>
     </main>
+    <div class="main-modal-containers" style="display: none;">
+        <div class="modal-container-bike-booking-datepicker">
+            <div id="datepicker" class="bike-booking-datepicker-modal">
+                <form id="bike-booking-datepicker-form">
+                    <h3>Datepicker Form</h3>
+                    <div class="start-date-section">
+                        <label for="start-date">Start Date:</label><br/>
+                        <input type="text" name="start-date" id="start-date" class="start-date date">
+                    </div>
+                    <div class="end-date-section">
+                        <label for="end-date">End Date:</label><br/>
+                        <input type="text" name="end-date" id="end-date" class="end-date date">
+                    </div>
+                    <div class="bike-hub-section">
+                        <label for="bike-hub">Hub:</label><br/>
+                        <input type="text" name="bike-hub" id="bike-hub" class="bike-hub" disabled style="border: 1px solid #000; background-color: #EEEEEE">
+                    </div>
+                    <div class="bike-name-section">
+                        <label for="bike-name">Bike:</label><br/>
+                        <input type="text" name="bike-name" id="bike-name" class="bike-name" disabled style="border: 1px solid #000; background-color: #EEEEEE">
+                    </div>
+                    <div class="bike-booking-datepicker-form-errors"></div>
+                    <a href="#" rel="modal:close">Cancel</a>
+                    <input type="submit" value="Confirm">
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
-<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
-<script type="text/javascript" src="/scripts/bike-listings.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         const classDisable = "disable";
         const classActive = "active";
-
         
         const $dashboardTabButton = $(".dashboard-tab-button");
         const $bookingsTabButton = $(".bookings-tab-button");
@@ -292,8 +331,6 @@
         const $dashboardContentSection = $(".dashboard-content");
 
         const $bookingsContentSection =  $(".bookings-content");
-        const $hubListOptionButton = $(".bookings-content .hub");
-        
 
         $dashboardTabButton.on("click", function () {
             // Content Update
@@ -303,9 +340,9 @@
             // Button colour update
             $bookingsTabButton.removeClass(classActive);
             $(this).addClass(classActive);
-        });
-
-        
+        });        
     });
 </script>
+<script type="text/javascript" src="/scripts/bookings/bike-listings.js"></script>
+<script type="text/javascript" src="/scripts/bookings/book-bike.js"></script>
 </html>
