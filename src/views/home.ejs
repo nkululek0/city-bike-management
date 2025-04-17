@@ -244,6 +244,63 @@
             color: #fff;
             text-decoration: none;
         }
+
+        .form-date-section,
+        .form-bike-details-section,
+        .form-buttons-section {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .form-date-section,
+        .form-bike-details-section {
+            margin-bottom: 3rem;
+        }
+
+        .modal {
+            padding: 30px 30px;
+        }
+
+        .form-header-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-underline::before {
+            content: "";
+            border: 1px solid #000;
+            display: inline-block;
+            width: 5rem;
+            position: relative;
+            bottom: 0.7rem;
+        }
+
+        .form-cancel-button {
+            background-color: #EA0000;
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1.5rem;
+        }
+
+        .form-submit-button {
+            color: #fff;
+            background-color: #00D30B;
+            border: none;
+            padding: 0.5rem 1.5rem;
+        }
+        .form-submit-button:hover {
+            cursor: pointer;
+        }
+
+        .start-date-section input,
+        .end-date-section input,
+        .bike-hub-section input,
+        .bike-name-section input {
+            padding: 0.2rem;
+        }
     </style>
 </head>
 <body>
@@ -295,27 +352,42 @@
         <div class="modal-container-bike-booking-datepicker">
             <div id="datepicker" class="bike-booking-datepicker-modal">
                 <form id="bike-booking-datepicker-form">
-                    <h3>Datepicker Form</h3>
-                    <div class="start-date-section">
-                        <label for="start-date">Start Date:</label><br/>
-                        <input type="text" name="start-date" id="start-date" class="start-date date">
+                    <div class="form-header-section">
+                        <h3 class="form-header">Booking Form</h3>
+                        <div class="header-underline"></div>
                     </div>
-                    <div class="end-date-section">
-                        <label for="end-date">End Date:</label><br/>
-                        <input type="text" name="end-date" id="end-date" class="end-date date">
+                    <div class="form-content">
+                        <div class="form-date-section">
+                            <div class="start-date-section">
+                                <label for="start-date">Start Date:</label><br/>
+                                <input type="text" name="start-date" id="start-date" class="start-date date">
+                            </div>
+                            <div class="end-date-section">
+                                <label for="end-date">End Date:</label><br/>
+                                <input type="text" name="end-date" id="end-date" class="end-date date">
+                            </div>
+                        </div>
+                        <div class="form-bike-details-section">
+                            <div class="bike-hub-section">
+                                <label for="bike-hub">Hub:</label><br/>
+                                <input type="text" name="bike-hub" id="bike-hub" class="bike-hub" disabled style="border: 1px solid #000; background-color: #EEEEEE">
+                            </div>
+                            <div class="bike-name-section">
+                                <label for="bike-name">Bike:</label><br/>
+                                <input type="text" name="bike-name" id="bike-name" class="bike-name" disabled style="border: 1px solid #000; background-color: #EEEEEE">
+                            </div>
+                        </div>
+                        <div class="bike-booking-datepicker-form-errors"></div>
+                        <div class="form-buttons-section">
+                            <a href="#" rel="modal:close" class="form-cancel-button">Cancel</a>
+                            <input type="submit" value="Confirm" class="form-submit-button">
+                        </div>
                     </div>
-                    <div class="bike-hub-section">
-                        <label for="bike-hub">Hub:</label><br/>
-                        <input type="text" name="bike-hub" id="bike-hub" class="bike-hub" disabled style="border: 1px solid #000; background-color: #EEEEEE">
-                    </div>
-                    <div class="bike-name-section">
-                        <label for="bike-name">Bike:</label><br/>
-                        <input type="text" name="bike-name" id="bike-name" class="bike-name" disabled style="border: 1px solid #000; background-color: #EEEEEE">
-                    </div>
-                    <div class="bike-booking-datepicker-form-errors"></div>
-                    <a href="#" rel="modal:close">Cancel</a>
-                    <input type="submit" value="Confirm">
                 </form>
+            </div>
+            <div class="datepicker-form-response-modal">
+                <div class="modal-content"></div>
+                <p class="form-okay-button">OK</p>
             </div>
         </div>
     </div>

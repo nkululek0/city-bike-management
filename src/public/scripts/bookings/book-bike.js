@@ -12,6 +12,7 @@ jQuery(function() {
     const bikeBookEndDateSelector = `${ bikeBookingDatepickerFormSelector } #end-date`;
 
     $("#bike-booking-datepicker-form .date").dateAndTime();
+    let addedFormEventListener = false;
 
     $bookingsContentSection.on("click", bookBikeButtonSelector, function (event) {
         const $self = $(this);
@@ -28,7 +29,10 @@ jQuery(function() {
 
                 const userID = 1;
                 const bikeID = Number($self.attr("attr-bike-ID"));
-                _addSubmitFormEventListener(1, bikeID);
+
+                if (!addedFormEventListener) {
+                    _addSubmitFormEventListener(1, bikeID);
+                }
             }
             else {
                 $bikeBookingModal = $(bikeBookingDatepickerModalSelector);
@@ -38,6 +42,8 @@ jQuery(function() {
     });
 
     const _addSubmitFormEventListener = (userID, bikeID) => {
+        addedFormEventListener = true;
+
         $(bikeBookingDatepickerFormSelector).on("submit", async function (event) {
             event.preventDefault();
 
