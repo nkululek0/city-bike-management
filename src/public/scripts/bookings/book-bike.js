@@ -11,6 +11,8 @@ jQuery(function() {
     const bikeBookStartDateSelector = `${ bikeBookingDatepickerModalSelector } #start-date`;
     const bikeBookEndDateSelector = `${ bikeBookingDatepickerFormSelector } #end-date`;
 
+    const bikeBookingFormResponseModal = ".datepicker-form-response-modal";
+
     $("#bike-booking-datepicker-form .date").dateAndTime();
     let addedFormEventListener = false;
 
@@ -58,7 +60,12 @@ jQuery(function() {
                 });
         
                 let data = await response.json();
-                console.log(data);
+                let $responseForm = $(bikeBookingFormResponseModal);
+
+                $responseForm.modal({
+                    closeExisting: false
+                });
+                $($responseForm.children()[0]).html(`<p class="success-message">${ data.message }</p>`);
             } 
             catch (error) {
                 console.log(error);

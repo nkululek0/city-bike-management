@@ -118,7 +118,7 @@ const bookingsController = {
 
             if (bookedBike.hasOwnProperty("bookingID")) {
                 res.json({
-                    data: "Biked Booked Successfully"
+                    message: "Biked Booked Successfully"
                 });
             }
 
