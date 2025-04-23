@@ -12,6 +12,7 @@ jQuery(function() {
     const bikeBookEndDateSelector = `${ bikeBookingDatepickerFormSelector } #end-date`;
 
     const bikeBookingFormResponseModal = ".datepicker-form-response-modal";
+    const bikeBookingFormOkButton = `${ bikeBookingFormResponseModal } .form-ok-button`;
 
     $("#bike-booking-datepicker-form .date").dateAndTime();
     let addedFormEventListener = false;
@@ -63,13 +64,20 @@ jQuery(function() {
                 let $responseForm = $(bikeBookingFormResponseModal);
 
                 $responseForm.modal({
-                    closeExisting: false
+                    closeExisting: false,
+                    escapeClose: false,
+                    clickClose: false,
+                    showClose: false
                 });
-                $($responseForm.children()[0]).html(`<p class="success-message">${ data.message }</p>`);
-            } 
+                $($responseForm.children().get(0)).html(`<p class="success-message">${ data.message }</p>`);
+            }
             catch (error) {
                 console.log(error);
             }
-        })
+        });
+
+        $(bikeBookingFormOkButton).on("click", function (event) {
+            window.location.reload();
+        });
     };
 });
