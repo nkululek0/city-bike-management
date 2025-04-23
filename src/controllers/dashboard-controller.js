@@ -1,16 +1,13 @@
 import dashboardModel from "../models/dashboard-model.js";
 
 const dashboardController = {
-    getDashboard (req, res) {
+    async getDashboard (req, res) {
         try {
-            let data = dashboardModel.getDashboard();
+            let data = await dashboardModel.getDashboard(1);
             
             if (data && typeof data == "object" && Object.entries(data).length > 0) {
-                // res.json(data);
-                res.render("home", {
-                    cities: data.cities,
-                    bikes: data.bikes
-                });
+                console.log(data);
+                res.render("home");
             }
             else {
                 let errorMessage = "There was an issue while processing dashboard data";

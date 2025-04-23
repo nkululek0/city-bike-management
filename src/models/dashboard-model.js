@@ -1,71 +1,94 @@
-let data = {
-    cities: [
-        {
-            ID: 1,
-            Name: "De Pijp"
-        },
-        {
-            ID: 2,
-            Name: "Oud-Zuid"
-        },
-        {
-            ID: 3,
-            Name: "Reguliersgracht"
-        },
-        {
-            ID: 4,
-            Name: "Damrak"
+import { User, BookingsStatus, Date, Bike } from "../services/database-data.js";
+
+const dashboardModel = {
+    async getDashboard (userID) {
+        let result = {
+            user: null,
+            booking: null,
+            bike: null
+        };
+        let user = await _userOperations.getCurrentUser(userID);
+
+        if (user.BookingsID.length > 0) {
+            let booking = await _bookingOperations.getCurrentOngoingBooking(user.BookingsID);
+            result.booking = booking;
+
+            let bike = await _bikeOperations.getCurrentlyBookedBiked(booking.BikeID);
+            result.bike = bike;
         }
-    ],
-    bikes: {
-        available: [
-            {
-                ID: 1,
-                Name: "Bike-1",
-                BookedTimes: 2,
-                Location: "De Pijp"
-            },
-            {
-                ID: 3,
-                Name: "Bike-3",
-                BookedTimes: 3,
-                Location: "Reguliersgracht"
-            },
-            {
-                ID: 4,
-                Name: "Bike-4",
-                BookedTimes: 1,
-                Location: "Damrak"
-            }
-        ],
-        booked: [
-            {
-                ID: 2,
-                Name: "Bike-2",
-                BookedTimes: 5,
-                Location: "Oud-Zuid"
-            },
-        ],
-        maintenance: [
-            {
-                ID: 5,
-                Name: "Bike-5",
-                BookedTimes: 6,
-                Location: "Oud-Zuid"
-            },
-            {
-                ID: 6,
-                Name: "Bike-6",
-                BookedTimes: 6,
-                Location: "Damrak"
-            },
-        ]
+        delete user.BookingsID;
+
+        result.user = user;
+
+        return result;
     }
 };
 
-const dashboardModel = {
-    getDashboard () {
-        let result = data;
+/**
+ * Values of BookingStatusTypes will be:
+ * ["", "booked", "cancelled", "completed"]
+ */
+const BookingStatusTypes = [""];
+BookingsStatus.forEach((status) => {
+    BookingStatusTypes[status.ID] = status.Value;
+});
+
+const _userOperations = {
+    async getCurrentUser (userID) {
+        let result;
+        let user = await User.find((possibleUser) => possibleUser.ID == userID);
+        result = {
+            ID: user.ID,
+            FirstName: user.FirstName,
+            LastName: user.LastName,
+            ProfilePictureURL: user.ProfilePictureURL,
+            Email: user.Email,
+            BookingsID: user.BookingsID
+        }
+        
+        return result;
+    }
+};
+
+const _bookingOperations = {
+    validBookingsStatuses: {
+        booked: BookingStatusTypes[1],
+        cancelled: BookingStatusTypes[2],
+        complete: BookingStatusTypes[3],
+    },
+
+    async getCurrentOngoingBooking (bookings) {
+        const self = this;
+        let result = {};
+
+        if (bookings.length > 0) {
+            bookings.forEach(async (booking) => {
+                let currentBookingID = booking.BookingStatusID;
+    
+                if (currentBookingID == self.validBookingsStatuses.booked) {
+                    const date = await _DateOperations.getCurrentBookingDate(booking.DateID);
+                    booking.date = date;
+                    result = booking;
+                }
+            });
+        }
+        return result;
+    }
+};
+
+const _DateOperations = {
+    async getCurrentBookingDate (dateID) {
+        return Date.find((date) => date.ID == dateID);
+    }
+};
+
+const _bikeOperations = {
+    async getCurrentlyBookedBiked (bikeID) {
+        let result = {};
+
+        if (bikeID) {
+            result = Bike.find((bike) => bike.ID == bikeID);
+        }
 
         return result;
     }

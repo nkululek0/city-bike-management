@@ -5,6 +5,7 @@ let User = [
         LastName: "Zikode",
         Email: "nkululekovuyo0103@gmail.com",
         Password: "1234",
+        ProfilePictureURL: "/images/users/nkululekovuyo0103@gmail.com.jpg",
         BookingsID: []
     }
 ];

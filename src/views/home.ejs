@@ -64,55 +64,8 @@
             color: #000;
         }
 
-        .dashboard-content {
-            margin: 1rem;
-        }
-
         .content-header {
             margin-bottom: 1.8rem;
-        }
-
-        .bike-container {
-            width: 15rem;
-            display: inline-block;
-            border: 1px solid #000;
-            margin-right: 2rem;
-        }
-
-        .available-bikes {
-            background-color: #3ccd00;
-        }
-
-        .booked-bikes {
-            background-color: #d3d3d3;
-        }
-
-        .maintenance-bikes {
-            background-color: #ac0000;
-        }
-
-        .dashboard-content .status {
-            font-size: 20px;
-            text-align: center;
-            margin: 5px 0px;
-            text-decoration: underline;
-        }
-
-        i.fa-solid {
-            font-family: FontAwesome;
-        }
-
-        .fa-solid.fa-bicycle {
-            display: block;
-            width: 100%;
-            text-align: center;
-            font-size: 7rem;
-        }
-
-        .bike-count {
-            padding: 10px;
-            background-color: #fff;
-            border-top: 1px solid #000;
         }
 
         .bookings-content {
@@ -333,21 +286,6 @@
         <div class="page-content-section">
             <div class="dashboard-content">
                 <h1 class="content-header">Dashboard</h1>
-                <div class="available-bikes bike-container">
-                    <p class="status">Available</p>
-                    <i class="fa-solid fa-bicycle"></i>
-                    <p class="bike-count">Count: <%= bikes.available.length %></p>
-                </div>
-                <div class="booked-bikes bike-container">
-                    <p class="status">Booked</p>
-                    <i class="fa-solid fa-bicycle"></i>
-                    <p class="bike-count">Count: <%= bikes.booked.length %></p>
-                </div>
-                <div class="maintenance-bikes bike-container">
-                    <p class="status">Maintenance</p>
-                    <i class="fa-solid fa-bicycle"></i>
-                    <p class="bike-count">Count: <%= bikes.maintenance.length %></p>
-                </div>
             </div>
             <div class="bookings-content disable">
                 <h1 class="content-header">Bookings</h1>
