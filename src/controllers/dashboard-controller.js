@@ -7,7 +7,7 @@ const dashboardController = {
             
             if (data && typeof data == "object" && Object.entries(data).length > 0) {
                 console.log(data);
-                res.render("home");
+                res.render("home", data);
             }
             else {
                 let errorMessage = "There was an issue while processing dashboard data";

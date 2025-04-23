@@ -68,6 +68,53 @@
             margin-bottom: 1.8rem;
         }
 
+        /** Dashboard Styling **/
+        .dashboard-content {
+            width: 100%;
+            padding: 1rem;
+        }
+
+        .dashboard-content .dashboard-header-section {
+            display: flex;
+            justify-content: space-between;
+            height: 21dvh;
+        }
+
+        .dashboard-content .profile-content {
+            display: flex;
+            height: 8rem;
+        }
+
+        .dashboard-content .profile-name-section {
+            align-self: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-right: 2rem;
+        }
+
+        .dashboard-content .fullname-underline::before {
+            content: "";
+            display: block;
+            border: 1px solid #000;
+            width: 5rem;
+            position: relative;
+            top: 0.1rem;
+        }
+
+        .dashboard-content .profile-picture {
+            height: 100%;
+            width: 8rem;
+            border-radius: 50%;
+        }
+
+        .dashboard-content .booked-bike img {
+            width: 15rem;
+            height: 12rem;
+        }
+        /** END Dashboard Styling **/
+
         .bookings-content {
             width: 100%;
             padding: 1rem;
@@ -275,7 +322,7 @@
     </style>
 </head>
 <body>
-    <main attr-user-id="1">
+    <main attr-user-id="<%= user.ID %>">
         <div class="page-navigation-section">
             <h2 class="page-navigation-header">City Bike</h2>
             <ul class="page-navigation">
@@ -285,7 +332,60 @@
         </div>
         <div class="page-content-section">
             <div class="dashboard-content">
-                <h1 class="content-header">Dashboard</h1>
+                <div class="dashboard-header-section">
+                    <div class="general-content">
+                        <h1 class="content-header">Dashboard</h1>
+                        <p class="content-description">User bike management dashboard</p>
+                    </div>
+                    <div class="profile-content">
+                        <div class="profile-name-section">
+                            <h4 class="profile-fullname">
+                                <span class="firstname"><%= user.FirstName %></span>
+                                <span class="lastname"><%= user.LastName %></span>
+                            </h4>
+                            <div class="fullname-underline"></div>
+                        </div>
+                        <div class="profile-picture-section">
+                            <img src="<%= user.ProfilePictureURL%>" alt="" class="profile-picture">
+                        </div>
+                    </div>
+                </div>
+                <div class="main-dashboard-content">
+                    <div class="currently-booked-bike-container">
+                        <div class="title-section">
+                            <div class="title-content">
+                                <h3 class="currently-booked">Currently Booked</h3>
+                            </div>
+                            <div class="title-underline"></div>
+                        </div>
+                        <div class="currently-booked-bike-content">
+                            <% if (bike) { %>
+                                <div class="booked-bike">
+                                    <div class="bike-picture">
+                                        <img src="/images/bikes<%= bike.PictureURL %>" alt="">
+                                    </div>
+                                    <div class="booked-biked-details">
+                                        <div class="bike-name-and-hub">
+                                            <div class="bike-name">
+                                                <span class="label">Bike: </span>
+                                                <span class="name"><%= bike.Name %></span>
+                                            </div>
+                                            <div class="bike-hub">
+                                                <span class="label">Hub: </span>
+                                                <span class="name"><%= bike.HubID %></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } else { %>
+                                <div class="no-bikes">
+                                    <p>You do not have any bikes booked currently</p>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <div class="bookings-content disable">
                 <h1 class="content-header">Bookings</h1>

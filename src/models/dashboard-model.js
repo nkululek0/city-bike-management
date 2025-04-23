@@ -10,11 +10,9 @@ const dashboardModel = {
         let user = await _userOperations.getCurrentUser(userID);
 
         if (user.BookingsID.length > 0) {
-            let booking = await _bookingOperations.getCurrentOngoingBooking(user.BookingsID);
-            result.booking = booking;
+            result.booking = await _bookingOperations.getCurrentOngoingBooking(user.BookingsID);
 
-            let bike = await _bikeOperations.getCurrentlyBookedBiked(booking.BikeID);
-            result.bike = bike;
+            result.bike = await _bikeOperations.getCurrentlyBookedBiked(result.booking.BikeID);
         }
         delete user.BookingsID;
 
@@ -68,9 +66,14 @@ const _bookingOperations = {
                 let currentBooking = Booking.find((possibleBooking) => possibleBooking.ID == booking);
 
                 if (currentBooking.BookingStatusID == bookedStatusID) {
-                    const date = await _DateOperations.getCurrentBookingDate(booking.DateID);
-                    booking.date = date;
-                    result = booking;
+                    const date = _DateOperations.getCurrentBookingDate(currentBooking.DateID);
+                    result = {
+                        ID: currentBooking.ID,
+                        BikeID: currentBooking.BikeID,
+                        BookingStatusID: currentBooking.BookingStatusID,
+                        DateID: currentBooking.DateID,
+                        Date: date
+                    };
                 }
             });
         }
@@ -79,7 +82,7 @@ const _bookingOperations = {
 };
 
 const _DateOperations = {
-    async getCurrentBookingDate (dateID) {
+    getCurrentBookingDate (dateID) {
         return Date.find((date) => date.ID == dateID);
     }
 };
@@ -89,7 +92,7 @@ const _bikeOperations = {
         let result = {};
 
         if (bikeID) {
-            result = Bike.find((bike) => bike.ID == bikeID);
+            result = await Bike.find((bike) => bike.ID == bikeID);
         }
 
         return result;
