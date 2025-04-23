@@ -90,7 +90,7 @@ const _createBooking = (bikeID, bikeStatusID, bookingStartDate, bookingEndDate) 
     const booking = {
         ID: (Booking.length + 1),
         BikeID: bikeID,
-        BookingsStatusID: 2,
+        BookingStatusID: 2,
         DateID: _createDateEntry(bookingStartDate, bookingEndDate)
     }
     _updateBikeStatus(bikeID, bikeStatusID);

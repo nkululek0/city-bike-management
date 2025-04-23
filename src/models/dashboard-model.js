@@ -1,4 +1,4 @@
-import { User, BookingsStatus, Date, Bike } from "../services/database-data.js";
+import { User, Booking, BookingsStatus, Date, Bike } from "../services/database-data.js";
 
 const dashboardModel = {
     async getDashboard (userID) {
@@ -57,15 +57,17 @@ const _bookingOperations = {
         complete: BookingStatusTypes[3],
     },
 
-    async getCurrentOngoingBooking (bookings) {
+    async getCurrentOngoingBooking (bookingsID) {
         const self = this;
         let result = {};
 
-        if (bookings.length > 0) {
-            bookings.forEach(async (booking) => {
-                let currentBookingID = booking.BookingStatusID;
-    
-                if (currentBookingID == self.validBookingsStatuses.booked) {
+        if (bookingsID.length > 0) {
+            const bookedStatusID = BookingStatusTypes.indexOf(self.validBookingsStatuses.booked);
+
+            bookingsID.forEach(async (booking) => {
+                let currentBooking = Booking.find((possibleBooking) => possibleBooking.ID == booking);
+
+                if (currentBooking.BookingStatusID == bookedStatusID) {
                     const date = await _DateOperations.getCurrentBookingDate(booking.DateID);
                     booking.date = date;
                     result = booking;
