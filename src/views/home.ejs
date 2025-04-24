@@ -368,11 +368,27 @@
                                         <div class="bike-name-and-hub">
                                             <div class="bike-name">
                                                 <span class="label">Bike: </span>
-                                                <span class="name"><%= bike.Name %></span>
+                                                <span class="value"><%= bike.Name %></span>
                                             </div>
                                             <div class="bike-hub">
                                                 <span class="label">Hub: </span>
-                                                <span class="name"><%= bike.HubID %></span>
+                                                <span class="value"><%= bike.Hub %></span>
+                                            </div>
+                                        </div>
+                                        <div class="bike-booking-dates">
+                                            <div class="from">
+                                                <span class="label">From: </span>
+                                                <span class="value">
+                                                    <span class="date"><%= booking.Date.From.split("-")[0] %></span>
+                                                    <span class="time"><%= booking.Date.From.split("-")[1] %></span>
+                                                </span>
+                                            </div>
+                                            <div class="to">
+                                                <span class="label">To: </span>
+                                                <span class="value">
+                                                    <span class="date"><%= booking.Date.To.split("-")[0] %></span>
+                                                    <span class="time"><%= booking.Date.To.split("-")[1] %></span>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>

@@ -1,4 +1,4 @@
-import { User, Booking, BookingsStatus, Date, Bike } from "../services/database-data.js";
+import { User, Booking, BookingsStatus, Date as BookingDate, Bike, Hub } from "../services/database-data.js";
 
 const dashboardModel = {
     async getDashboard (userID) {
@@ -83,7 +83,29 @@ const _bookingOperations = {
 
 const _DateOperations = {
     getCurrentBookingDate (dateID) {
-        return Date.find((date) => date.ID == dateID);
+        const self = this;
+        let result = {};
+        const date = BookingDate.find((date) => date.ID == dateID);
+        result = self._extractDate(date);
+        
+        return result;
+    },
+
+    _extractDate (date) {
+        let result = {};
+        let startDateObj = new Date(date.From);
+        result.From = formatDate(startDateObj);
+
+        let endDateObj = new Date(date.To);
+        result.To = formatDate(endDateObj);
+
+        function formatDate (dateObj) {
+            let dateString = dateObj.toDateString();
+            let startTime = dateObj.toLocaleTimeString().slice(0, -3);
+
+            return dateString.concat("-", startTime);
+        };
+        return result;
     }
 };
 
@@ -92,7 +114,15 @@ const _bikeOperations = {
         let result = {};
 
         if (bikeID) {
-            result = await Bike.find((bike) => bike.ID == bikeID);
+            const bike = await Bike.find((bike) => bike.ID == bikeID);
+            const hub = await Hub.find((hub) => hub.ID == bike.HubID);
+            
+            result = {
+                ID: bike.ID,
+                Name: bike.Name,
+                PictureURL: bike.PictureURL,
+                Hub: hub.Name
+            }
         }
 
         return result;
