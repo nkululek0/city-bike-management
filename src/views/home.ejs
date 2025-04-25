@@ -109,9 +109,35 @@
             border-radius: 50%;
         }
 
+        .dashboard-content .currently-booked-bike-container {
+            height: max-content;
+            width: 100%;
+            box-shadow: 0 0 3px 0.5px #8c8c8c;
+            padding: 2rem;
+        }
+
         .dashboard-content .booked-bike img {
             width: 15rem;
             height: 12rem;
+        }
+
+        .dashboard-content .booked-bike {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .dashboard-content .bike-name-and-hub {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .dashboard-content .booked-biked-details .label {
+            margin-right: 0.5rem;
+            font-weight: 800;
+        }
+
+        .dashboard-content .bike-booking-dates .time {
+            font-style: italic;
         }
         /** END Dashboard Styling **/
 
@@ -391,6 +417,10 @@
                                                 </span>
                                             </div>
                                         </div>
+                                        <div class="buttons-container">
+                                            <button class="cancel-button">Cancel</button>
+                                            <button class="complete-button">Complete</button>
+                                        </div>
                                     </div>
                                 </div>
                             <% } else { %>
@@ -475,6 +505,8 @@
         const $bookingsTabButton = $(".bookings-tab-button");
 
         const $dashboardContentSection = $(".dashboard-content");
+        const $cancelCurrentlyBookBike = $(".currently-booked-bike-content .cancel-button");
+        const $completeCurrentlyBookedBike = $("currently-booked-bike-content .complete-button");
 
         const $bookingsContentSection =  $(".bookings-content");
 
@@ -486,7 +518,15 @@
             // Button colour update
             $bookingsTabButton.removeClass(classActive);
             $(this).addClass(classActive);
-        });        
+        });
+        
+        $completeCurrentlyBookedBike.on("click", function () {
+            // handle complete bike booking request here
+        });
+
+        $cancelCurrentlyBookBike.on("click", function () {
+            // handle cancel bike booking request here
+        });
     });
 </script>
 <script type="text/javascript" src="/scripts/bookings/bike-listings.js"></script>

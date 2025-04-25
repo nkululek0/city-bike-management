@@ -93,17 +93,16 @@ const _DateOperations = {
 
     _extractDate (date) {
         let result = {};
-        let startDateObj = new Date(date.From);
-        result.From = formatDate(startDateObj);
 
-        let endDateObj = new Date(date.To);
-        result.To = formatDate(endDateObj);
+        result.From = formatDate(date.From);
+        result.To = formatDate(date.To);
 
-        function formatDate (dateObj) {
-            let dateString = dateObj.toDateString();
-            let startTime = dateObj.toLocaleTimeString().slice(0, -3);
+        function formatDate (dateString) {
+            let date = new Date(dateString);
+            let day = date.toDateString();
+            let time = date.toLocaleTimeString().slice(0, -3);
 
-            return dateString.concat("-", startTime);
+            return day.concat("-", time);
         };
         return result;
     }
