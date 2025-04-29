@@ -57,45 +57,51 @@ const _bookingOperations = {
 
     async getCurrentOngoingBooking (bookingsID) {
         const self = this;
-        let result = {};
+        let result;
 
         if (bookingsID.length > 0) {
             const bookedStatusID = BookingStatusTypes.indexOf(self.validBookingsStatuses.booked);
-
-            bookingsID.forEach(async (booking) => {
-                let currentBooking = Booking.find((possibleBooking) => possibleBooking.ID == booking);
-
-                if (currentBooking.BookingStatusID == bookedStatusID) {
-                    const date = _DateOperations.getCurrentBookingDate(currentBooking.DateID);
-                    result = {
-                        ID: currentBooking.ID,
-                        BikeID: currentBooking.BikeID,
-                        BookingStatusID: currentBooking.BookingStatusID,
-                        DateID: currentBooking.DateID,
-                        Date: date
-                    };
-                }
+            
+            const currentBooking = await Booking.find((possibleBooking) => {
+                return bookingsID.find((possibleID) => {
+                    if (possibleBooking.ID == possibleID) {
+                        if (possibleBooking.BookingStatusID == bookedStatusID) {
+                            return possibleBooking;
+                        }
+                    }
+                });
             });
+            const date = await _DateOperations.getCurrentBookingDate(currentBooking.DateID);
+
+            result = {
+                ID: currentBooking.ID,
+                BikeID: currentBooking.BikeID,
+                BookingStatusID: currentBooking.BookingStatusID,
+                DateID: currentBooking.DateID,
+                Date: date
+            };
         }
         return result;
     }
 };
 
 const _DateOperations = {
-    getCurrentBookingDate (dateID) {
+    async getCurrentBookingDate (dateID) {
         const self = this;
-        let result = {};
-        const date = BookingDate.find((date) => date.ID == dateID);
+        let result;
+        const date = await BookingDate.find((date) => date.ID == dateID);
         result = self._extractDate(date);
         
         return result;
     },
 
     _extractDate (date) {
-        let result = {};
+        let result;
 
-        result.From = formatDate(date.From);
-        result.To = formatDate(date.To);
+        result = {
+            From: formatDate(date.From),
+            To: formatDate(date.To)
+        };
 
         function formatDate (dateString) {
             let date = new Date(dateString);
@@ -110,7 +116,7 @@ const _DateOperations = {
 
 const _bikeOperations = {
     async getCurrentlyBookedBiked (bikeID) {
-        let result = {};
+        let result;
 
         if (bikeID) {
             const bike = await Bike.find((bike) => bike.ID == bikeID);
