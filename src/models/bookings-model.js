@@ -83,6 +83,29 @@ const bookingsModel = {
         }
 
         return result;
+    },
+    
+    async cancelBikeBooking (userID, bookingID) {
+        let result;
+        // find booking using bookingID from user.BookingsID using userID
+        let user = User.find((user) => user.ID == userID);
+        if (user && user.indexOf(bookingID) != -1) {
+            let booking = Booking.find((possibleBooking) => {
+                return possibleBooking.BookingStatusID == bookingID;
+            });
+            // update bike status to available and increase bookedTimes
+            const bikeStatus = _bikeListOperations.validBikeStatuses.available;
+            const bikeStatusID = BikeStatusTypes.indexOf(bikeStatus);
+            _updateBikeStatus(booking.BikeID, bikeStatusID);
+
+            // update booking.BookingStatusID to cancelled
+            _updateUserBookings(userID, bookingID, "available");
+
+            result = {
+                bookingID: booking.ID
+            };
+        }
+        return result;
     }
 };
 
@@ -119,9 +142,15 @@ const _updateBikeStatus = (bikeID, bikeStatusID) => {
     }
 };
 
-const _updateUserBookings = (userID, bookingID) => {
-    const userIndex = User.findIndex((user) => user.ID == userID);
-    User[userIndex].BookingsID.push(bookingID);
+const _updateUserBookings = (userID, bookingID, operation) => {
+    if (operation && operation == "update") {
+        let booking = Booking.find((possibleBooking) => possibleBooking.ID == bookingID);
+        booking.BookingStatusID = 2;
+    }
+    else {
+        const userIndex = User.findIndex((user) => user.ID == userID);
+        User[userIndex].BookingsID.push(bookingID);
+    }
 }
 
 export default bookingsModel;

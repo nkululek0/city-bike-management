@@ -146,6 +146,35 @@ const bookingsController = {
 
             responseStatus.json(responseJSON);
         }
+    },
+
+    async cancelBikeBooking (req, res) {
+        try {
+            let userID = Number(req.params.userID);
+            let bookingID = Number(req.params.bookingID);
+            
+            if (!bookingID) {
+                throw new Error(bookBikeErrors.invalidBikeID);
+            }
+            if (!userID) {
+                throw new Error(bookBikeErrors.invalidUserID);
+            }
+
+            const cancelledBikeResponse = await bookingsModel.cancelBikeBooking(userID, bookingID);
+
+            if (cancelledBikeResponse.hasOwnProperty("bookingID")) {
+                res.json({
+                    message: "Successfully cancelled booking"
+                });
+            }
+        }
+        catch (error) {
+            res.json({
+                error: {
+                    message: error.message
+                }
+            });
+        }
     }
 };
 
