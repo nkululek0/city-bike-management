@@ -89,17 +89,17 @@ const bookingsModel = {
         let result;
         // find booking using bookingID from user.BookingsID using userID
         let user = User.find((user) => user.ID == userID);
-        if (user && user.indexOf(bookingID) != -1) {
+        if (user && user.BookingsID.indexOf(bookingID) != -1) {
             let booking = Booking.find((possibleBooking) => {
-                return possibleBooking.BookingStatusID == bookingID;
+                return possibleBooking.ID == bookingID;
             });
             // update bike status to available and increase bookedTimes
             const bikeStatus = _bikeListOperations.validBikeStatuses.available;
             const bikeStatusID = BikeStatusTypes.indexOf(bikeStatus);
-            _updateBikeStatus(booking.BikeID, bikeStatusID);
+            _updateBikeStatus(booking.BikeID, bikeStatusID, true);
 
             // update booking.BookingStatusID to cancelled
-            _updateUserBookings(userID, bookingID, "available");
+            _updateUserBookings(userID, bookingID, "update");
 
             result = {
                 bookingID: booking.ID
@@ -133,16 +133,19 @@ const _createDateEntry = (startDate, endDate) => {
     return date.ID;
 };
 
-const _updateBikeStatus = (bikeID, bikeStatusID) => {
+const _updateBikeStatus = (bikeID, bikeStatusID, increaseBikeBookTimes = false) => {
     for (let bike of Bike) {
         if (bike.ID == bikeID) {
             bike.BikeStatusID = bikeStatusID;
+            if (increaseBikeBookTimes) {
+                bike.BookedTimes += 1;
+            }
             break;
         }
     }
 };
 
-const _updateUserBookings = (userID, bookingID, operation) => {
+const _updateUserBookings = (userID, bookingID, operation = "create") => {
     if (operation && operation == "update") {
         let booking = Booking.find((possibleBooking) => possibleBooking.ID == bookingID);
         booking.BookingStatusID = 2;

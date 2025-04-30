@@ -9,6 +9,6 @@ router.get("/:userID", bookingsController.getBookings);
 
 router.post("/:userID/:bikeID", bookingsController.bookBike);
 
-router.patch("/cancel-booking/:userID/:bookingID", bookingsController.cancelBikeBooking);
+router.patch("/cancel/:userID/:bookingID", bookingsController.cancelBikeBooking);
 
 export default router;

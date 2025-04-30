@@ -12,7 +12,9 @@ const dashboardModel = {
         if (user.BookingsID.length > 0) {
             result.booking = await _bookingOperations.getCurrentOngoingBooking(user.BookingsID);
 
-            result.bike = await _bikeOperations.getCurrentlyBookedBiked(result.booking.BikeID);
+            if (result.booking) {
+                result.bike = await _bikeOperations.getCurrentlyBookedBiked(result.booking.BikeID);
+            }
         }
         delete user.BookingsID;
 
@@ -71,15 +73,21 @@ const _bookingOperations = {
                     }
                 });
             });
-            const date = await _DateOperations.getCurrentBookingDate(currentBooking.DateID);
 
-            result = {
-                ID: currentBooking.ID,
-                BikeID: currentBooking.BikeID,
-                BookingStatusID: currentBooking.BookingStatusID,
-                DateID: currentBooking.DateID,
-                Date: date
-            };
+            if (currentBooking) {
+                const date = await _DateOperations.getCurrentBookingDate(currentBooking.DateID);
+    
+                result = {
+                    ID: currentBooking.ID,
+                    BikeID: currentBooking.BikeID,
+                    BookingStatusID: currentBooking.BookingStatusID,
+                    DateID: currentBooking.DateID,
+                    Date: date
+                };
+            }
+            else {
+                result = null;
+            }
         }
         return result;
     }
